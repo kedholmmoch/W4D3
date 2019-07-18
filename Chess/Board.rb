@@ -1,10 +1,17 @@
 require_relative './Piece.rb'
+require_relative './Rook.rb'
+require_relative './NullPiece.rb'
 
 class Board
 attr_reader :grid
 
   def initialize(size=8)
-    @grid = Array.new(size) { Array.new(size) }
+    @grid = Array.new(size) { Array.new(size, NullPiece.instance) }
+  end
+  
+  def set_board
+     add_piece(rook, [0,0])
+    
   end
 
   def [](pos)
@@ -17,15 +24,14 @@ attr_reader :grid
     grid[row][col] = val
   end
 
-  def set_board
-    skip_rows = [2, 3, 4, 5]
-    @grid.each_with_index do |row, row_idx|
-      next if skip_rows.include?(row_idx)
-      row.each_with_index do |col, col_idx|
-        @grid[row_idx][col_idx] = Piece.new
-      end
-    end
-  end
+  # def set_board
+  #   skip_rows = [2, 3, 4, 5]
+  #   @grid.each_with_index do |row, row_idx|
+  #     next if skip_rows.include?(row_idx)
+  #     row.each_with_index do |col, col_idx|
+  #       @grid[row_idx][col_idx] = Piece.new
+  #   end
+  # end
 
   def move_piece(start_pos, end_pos)
     if !pos_occupied?(start_pos) 
@@ -48,19 +54,20 @@ attr_reader :grid
   def valid_move?(pos)
 
   end
-  
+
+  def add_piece(piece, pos)
+    if self[0] == 0 || self[0] == 1
+      self[pos] = piece.capitalize.new(:black, @grid, pos)
+    elsif
+      self[pos] = piece.capitalize.new(:white, @grid, pos)
+    end
+  end
 end
 
 board = Board.new
 board.set_board
 
-puts "---------"
+ puts "---------"
 
-p board[[1,7]]
-p board[[3,7]]
-puts "---------"
-board.move_piece([1,7], [3,7])
-p board[[1,7]]
-p board[[3,7]]
-puts "---------"
-p board
+ p board[[0,0]]
+
